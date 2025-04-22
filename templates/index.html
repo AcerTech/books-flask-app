@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>مرحبًا بك في متصفح الكتب</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .welcome-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 50px;
+      text-align: center;
+    }
+
+    .welcome-container h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      color: #007bff;
+    }
+
+    .welcome-container p {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 30px;
+    }
+
+    .welcome-container a {
+      text-decoration: none;
+      background-color: #28a745;
+      color: white;
+      padding: 12px 30px;
+      border-radius: 8px;
+      font-size: 18px;
+      transition: background 0.3s;
+    }
+
+    .welcome-container a:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <div class="welcome-container">
+    <h1>📖 متصفح الكتب</h1>
+    <p>ابحث واستعرض كتبك المحفوظة بنقرة واحدة، مع دعم التصفح، النسخ، والطباعة.</p>
+    <a href="{{ url_for('home') }}">🚀 ابدأ التصفح الآن</a>
+  </div>
+</body>
+</html>

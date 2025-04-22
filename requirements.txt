@@ -1,0 +1,23 @@
+# requirements.txt
+Flask==2.3.2
+MarkupSafe==2.1.3
+camel-tools==1.5.0
+
+# render.com سيقوم بتثبيت هذه المكتبات تلقائيًا
+
+---
+
+# Procfile
+web: gunicorn app:app
+
+---
+
+# .render.yaml (اختياري لتحسين الإعداد)
+services:
+  - type: web
+    name: flask-books-app
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    autoDeploy: true

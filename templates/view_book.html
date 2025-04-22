@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ filename }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- عرض الصفحة -->
+  <div class="preview">
+    <!-- الشريط العلوي للعنوان -->
+    <div class="top-header">
+      <span class="book-icon">📘</span>
+      <span class="book-title">{{ filename.rsplit('.', 1)[0] }}</span>
+    </div>
+
+    <!-- أدوات التحكم -->
+    <div class="toolbar">
+      <button onclick="copyWithMeta()">📋 نسخ </button>
+      <button onclick="window.print()">🖨️ طباعة</button>
+      حجم الخط:
+      <button onclick="adjustFontSize(1)">+</button>
+      <button onclick="adjustFontSize(-1)">−</button>
+    </div>
+
+    <div id="display-area" class="full-display">جارٍ التحميل...</div>
+
+    <!-- أزرار التنقل والرقم -->
+    <div class="nav-buttons">
+      <button id="prev-btn" onclick="prevPage()">⬅️ السابق</button>
+      <div id="page-number">📄 الصفحة 1</div>
+      <button id="next-btn" onclick="nextPage()">التالي ➡️</button>
+    </div>
+  </div>
+
+  <!-- القائمة الجانبية -->
+  <div class="sidebar">
+    <h2>📚 قائمة الكتب</h2>
+    <form method="POST" action="/search">
+      <input type="text" name="query" placeholder="أدخل كلمة البحث" required>
+      <div>
+        <label><input type="radio" name="search_mode" value="and" checked> جميع الكلمات (AND)</label>
+        <label><input type="radio" name="search_mode" value="or"> أي كلمة (OR)</label>
+      </div>
+      <button type="submit">🔍 بحث</button>
+    </form>
+    <hr>
+    {% for folder, fname in books %}
+      <a href="{{ url_for('view_book', folder=folder, filename=fname) }}"
+         class="{% if folder == current_folder and fname == current_filename %}active-book{% endif %}">
+        {{ folder }}/{{ fname.rsplit('.', 1)[0] }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <!-- الجافاسكريبت -->
+  <script>
+    let currentPages = {{ book_pages | tojson | safe }};
+    let currentPageIndex = 0;
+    let fontSize = 17;
+
+    function showPage(index) {
+      const container = document.getElementById("display-area");
+      const number = document.getElementById("page-number");
+
+      if (currentPages.length > 0) {
+        container.innerHTML = currentPages[index];
+        currentPageIndex = index;
+
+        document.getElementById("prev-btn").disabled = (index === 0);
+        document.getElementById("next-btn").disabled = (index === currentPages.length - 1);
+
+        number.innerText = `📄 الصفحة ${index + 1}`;
+      }
+    }
+
+    function nextPage() {
+      if (currentPageIndex < currentPages.length - 1) {
+        showPage(currentPageIndex + 1);
+      }
+    }
+
+    function prevPage() {
+      if (currentPageIndex > 0) {
+        showPage(currentPageIndex - 1);
+      }
+    }
+
+    function adjustFontSize(change) {
+      fontSize += change;
+      document.getElementById("display-area").style.fontSize = fontSize + "px";
+    }
+
+    function copyWithMeta() {
+      const selection = window.getSelection().toString().trim();
+      const fullText = currentPages[currentPageIndex];
+      const pageInfo = document.getElementById("page-number").innerText;
+      const bookTitle = "{{ filename.rsplit('.', 1)[0] }}";
+
+      const textToCopy = selection || fullText;
+      const finalText = `${textToCopy}\n\n📘 الكتاب: ${bookTitle}\n${pageInfo}`;
+
+      navigator.clipboard.writeText(finalText)
+        .then(() => alert("✅ تم النسخ بنجاح"))
+        .catch(() => alert("❌ حدث خطأ أثناء النسخ"));
+    }
+
+    window.onload = function () {
+      showPage(0);
+    }
+  </script>
+
+</body>
+</html>

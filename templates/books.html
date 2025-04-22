@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>📚 قائمة الكتب</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="sidebar">
+    <h2>📚 الكتب المتوفرة</h2>
+    <form method="POST" action="/search">
+      <input type="text" name="query" placeholder="أدخل كلمة البحث" required>
+      <div>
+        <label><input type="radio" name="search_mode" value="and" checked> جميع الكلمات (AND)</label>
+        <label><input type="radio" name="search_mode" value="or"> أي كلمة (OR)</label>
+      </div>
+      <button type="submit">🔍 بحث</button>
+    </form>
+    <hr>
+    {% for folder, filename in books %}
+      <a href="{{ url_for('view_book', folder=folder, filename=filename) }}"
+         class="{% if folder == current_folder and filename == current_filename %}active-book{% endif %}">
+        {{ folder }}/{{ filename.rsplit('.', 1)[0] }}
+      </a>
+    {% endfor %}
+  </div>
+
+  <div class="content">
+    <h2>📖 اختر كتابًا من القائمة لعرضه</h2>
+  </div>
+</body>
+</html>
