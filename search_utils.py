@@ -2,8 +2,10 @@ import re
 from markupsafe import Markup
 from camel_tools.utils.dediac import dediac_ar
 
+
 def remove_diacritics(text):
-    return dediac_ar(text)
+    return re.sub(r'[\u064B-\u0652]', '', text)
+
 
 def highlight_text(original, query_terms):
     original_no_diac = ''
