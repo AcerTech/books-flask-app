@@ -5,12 +5,12 @@ camel-tools==1.5.0
 
 # render.com سيقوم بتثبيت هذه المكتبات تلقائيًا
 
----
+
 
 # Procfile
 web: gunicorn app:app
 
----
+
 
 # .render.yaml (اختياري لتحسين الإعداد)
 services:
