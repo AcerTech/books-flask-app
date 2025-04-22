@@ -1,6 +1,6 @@
 import re
 from markupsafe import Markup
-from camel_tools.utils.dediac import dediac_ar
+# from camel_tools.utils.dediac import dediac_ar
 
 
 def remove_diacritics(text):
